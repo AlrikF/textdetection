@@ -13,7 +13,6 @@ import cv2
 import time
 
 
-
 def countOccurrence(tup):
     max=0
 
@@ -34,48 +33,35 @@ def countOccurrence(tup):
 
     return True,color
 
-
-
-
-
-
-
-
 def fill_colour(image,startX,startY,endX,endY,cutpadding):
 
 
 	# print(image[startY, startX])
 
-	fill=[]
+	fill      = []
 
 	(h, w, c) = image.shape
 
-	if(endX>=w):
-		endX=w-1
+	if(endX >= w):
+		endX = w-1
 
-	if(endY>=h):
+	if(endY >= h):
 		endY=h-1
 
-	pad = cutpadding
-	pad2 = pad // 2
-	startY=startY+pad2
-	startX=startX+pad2
-	endX=endX-pad2
-	endY=endY-pad2
+	pad    = cutpadding
+	pad2   = pad // 2
+	startY = startY+pad2
+	startX = startX+pad2
+	endX   = endX-pad2
+	endY   = endY-pad2
 	height = endY - startY
-	width = endX - startX
+	width  = endX - startX
 
 	print("Extremes" )
 	print(startX)
 	print(endX)
 	print(startY)
 	print(endY)
-
-
-
-
-
-
 
 	fill.append(image[startY, startX])
 	fill.append(image[startY + (height // 4), startX])
@@ -94,14 +80,9 @@ def fill_colour(image,startX,startY,endX,endY,cutpadding):
 	fill.append(image[startY + (height*3 // 4), endX])
 	fill.append(image[endY, startX])
 
-	print(fill)
-
-	print(type(fill))
 
 	use,color_fill=countOccurrence(fill)
 	print("Colour filled is :")
-	print(color_fill)
-	print(use)
 
 	# time.sleep(3)
 
@@ -112,7 +93,6 @@ def fill_colour(image,startX,startY,endX,endY,cutpadding):
 				image[startY+i,startX+ j] = color_fill
 
 	(h, w, c) = image.shape
-
 	cv2.imshow("filled",image)
 	cv2.waitKey(0)
 
@@ -122,9 +102,6 @@ def fill_colour(image,startX,startY,endX,endY,cutpadding):
 	endY = endY + pad2
 
 	return image
-
-
-
 
 
 
@@ -244,17 +221,12 @@ boxes = non_max_suppression(np.array(rects), probs=confidences)
 results = []
 
 
-
-
-
-
 # loop over the bounding boxes
 for (startX, startY, endX, endY) in boxes:
 	# scale the bounding box coordinates based on the respective
 	# ratios
-#####################################################
 	image=fill_colour(image,startX,startY,endX,endY,0)
-######################################################""""
+
 
 
 	startX = int(startX * rW)
@@ -269,9 +241,6 @@ for (startX, startY, endX, endY) in boxes:
 	dY = int((endY - startY) * args["padding"])
 
 	# apply padding to each side of the bounding box, respectively
-
-
-
 
 	startX = max(0, startX - dX)
 	startY = max(0, startY - dY)
@@ -293,8 +262,7 @@ for (startX, startY, endX, endY) in boxes:
 	# of results
 	results.append(((startX, startY, endX, endY), text))
 
-# sort the results bounding box coordinates from top to bottom
-##########################################################################
+
 cv2.imshow("Final covered text ",image)
 cv2.waitKey(0)
 
@@ -304,9 +272,6 @@ ret,mask=cv2.threshold(mask,0,0,cv2.THRESH_BINARY)
 cv2.imshow("Initial mask",mask)
 cv2.waitKey(0)
 
-
-
-##############################################################################
 
 results = sorted(results, key=lambda r:r[0][1])
 
@@ -335,12 +300,10 @@ for ((startX, startY, endX, endY), text) in results:
 		cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0, 0, 255), 3)
 
 
-
-###########################################################
 	for i in range(endY - startY):
 		for j in range(endX - startX):
 			mask[startY + i, startX + j] = [255,255,255]
-############################################################
+
 
 	# show the output image
 	cv2.imshow("Final filled colour",show_fill_color)
@@ -357,16 +320,8 @@ for ((startX, startY, endX, endY), text) in results:
 
 cv2.imwrite("Final.jpg", show_fill_color)
 cv2.imwrite("Original.jpg", Original_image)
-
-
 name=ntpath.basename(args["image"])
-print(name)
+
 cv2.imwrite("D:/Webscraping/images/test/textremove/"+name,Original_image)
 cv2.imwrite("D:/Webscraping/images/test/textremove/"+name[:-4]+"textremoved.jpg",show_fill_color)
 
-
-#python text_recognition.py --east frozen_east_text_detection.pb  --image D:/Webscraping/images/testJARVIS/1.jpg
-
-#python text_recognition.py --east frozen_east_text_detection.pb  --image D:/Webscraping/images/testJARVIS/cropped/1cropped.jpg
-
-#python text_recognition.py --east frozen_east_text_detection.pb  --image D:/Webscraping/images/test/0.jpg
